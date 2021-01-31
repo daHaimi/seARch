@@ -1,0 +1,116 @@
+body {
+  font-family: 'Yusei Magic', Verdana, sans-serif;
+  color: beige;
+  background-color: #252f50;
+}
+h1 {
+  font-size: 3.2rem;
+  padding-left: 1em;
+}
+h2 {
+  font-size: 2.5rem;
+  padding-left: 2em;
+}
+h3 {
+  font-size: 2rem;
+  padding-left: 2.5em;
+}
+
+div#qrcode img {
+  display: inline;
+  border: .5em solid white;
+  width: 7em;
+}
+
+ul#players,
+ul#objectives,
+div#misc{
+  display:flex;
+  justify-content: space-around;
+}
+ul#players li,
+ul#objectives li,
+div#misc div {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+}
+ul#objectives li img {
+  max-height: 30vh;
+  max-width: 20vw;
+}
+
+select#theme {
+  display: block;
+}
+
+footer {
+  position: fixed;
+  background-color: #0f101f;
+  padding: .3em;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 2em;
+}
+#messages {
+}
+.volume {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.card-slim {
+  padding: 0 !important;
+}
+.open {
+  color: crimson;
+}
+.done {
+  color: #19b919;
+}
+
+.fails {
+  position: absolute;
+  right: -1em;
+  margin-top: -3em;
+}
+
+.winner-mark {
+  position: absolute;
+  color: #19b919;
+  text-shadow: 0 0 .5em #19b919;
+  transform: rotate(30deg);
+  top: -.3em;
+  left: -.5em;
+  font-size: 4em;
+}
+
+.instructions {
+  position: fixed;
+  background-color: rgba(0,0,0,.7);
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  vertical-align: baseline;
+  text-align: center;
+}
+.hidden {
+  display: none;
+}
+
+.instructions-content {
+  margin-top:30vh;
+  display:flex;
+  justify-content: space-around;
+}
+
+.instructions-content * {
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  width: 300px;
+}

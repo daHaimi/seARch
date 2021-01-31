@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>SeARch</title>
+  <link rel="stylesheet" href="phone.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap" rel="stylesheet">
+  <script src='https://aframe.io/releases/1.1.0/aframe.min.js'></script>
+  <script src="https://pagecdn.io/lib/ar-js/2.2.2/aframe-ar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-particle-system-component@1.0.x/dist/aframe-particle-system-component.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/howler@2.2.1/dist/howler.min.js" integrity="sha256-Z6YgsC4qiy8o007mNQmCgSXEmS8CGtzwXi6rzyP/ZiE=" crossorigin="anonymous"></script>
+  <script src="audio.js"></script>
+  <script src="eyecandy.js"></script>
+  <script src="client.js"></script>
+</head>
+
+<body style='margin: 0; overflow: hidden;'>
+  <a-scene vr-mode-ui="enabled: true" embedded arjs='sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;'>
+    <a-camera id="camera" position="0 0 0" look-controls="touchEnabled: false">
+      <a-entity cursor="fuse: false; fuseTimeout: 0"
+                position="0 0 -1">
+        <a-entity cursor="fuse: false; fuseTimeout: 0"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.04; radiusOuter: 0.06"
+                  material="color: white; shader: flat; opacity: .5">
+        </a-entity>
+        <a-entity position="0 0 -1"
+                  scale=".02 .12 .2"
+                  light="type: point; intensity: 2.0"
+                  geometry="primitive: box"
+                  material="color: red; shader: flat; opacity: .2">
+        </a-entity>
+        <a-entity position="0 0 -1"
+                  scale=".12 .02 .2"
+                  light="type: point; intensity: 2.0"
+                  geometry="primitive: box"
+                  material="color: red; shader: flat; opacity: .2">
+        </a-entity>
+      </a-entity>
+    </a-camera>
+  </a-scene>
+  <header><span id="players">1</span><label for="players"> Players</label> | <label for="timer">Time: </label><span id="timer">--.-</span> | <label for="fails">Fails: </label><span id="fails">0</span></header>
+  <footer></footer>
+</body>

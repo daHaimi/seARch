@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SeARch</title>
+  <link rel="stylesheet" href="host.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/howler@2.2.1/dist/howler.min.js" integrity="sha256-Z6YgsC4qiy8o007mNQmCgSXEmS8CGtzwXi6rzyP/ZiE=" crossorigin="anonymous"></script>
+  <script src="wshandler.js"></script>
+  <script src="audio.js"></script>
+  <script>
+    let webSocket;
+    const connect =() => {
+      webSocket = new WebSocket('wss://www.openbrowsergame.com/api/');
+      webSocket.onerror = onError = (event) => {
+        document.getElementById('messages').innerHTML = 'event.data';
+      };
+      webSocket.onopen = (event) => {
+        document.getElementById('messages').innerHTML = 'Connection established';
+        webSocket.send(JSON.stringify({
+          cmd: 'get-themes'
+        }))
+      };
+      webSocket.onmessage = (event) => {
+        console.log(event.data);
+        try {
+          wshandle(JSON.parse(event.data));
+        } catch (e) {
+          console.log(e, event);
+        }
+      };
+      webSocket.onclose = (e)=> {
+        console.log(e);
+        connect();
+      };
+    };
+    window.onload = () => {
+      connect();
+      new QRCode(document.getElementById("qrcode"), 'https://www.openbrowsergame.com/phone.html');
+      leAudio.init();
+      loadAudioSettings();
+      leAudio._audio.bg.autoplay = true;
+      leAudio._audio.bg.play();
+    };
+    window.onbeforeunload = function() {
+      webSocket.onclose = () => {};
+      console.log('closing');
+      webSocket.close();
+    };
+    function restartGame() {
+      webSocket.send(JSON.stringify({
+        cmd: 'restart',
+        num: document.getElementById('num_elems').getAttribute('value'),
+        theme: document.querySelector('#theme option:checked').getAttribute('value')
+      }))
+    }
+    function stopGame() {
+      webSocket.send(JSON.stringify({
+        cmd: 'stop'
+      }))
+    }
+    const loadAudioSettings = () => {
+      document.querySelector('#volume').value = leAudio.volume * 100;
+      document.querySelector('i.speaker').innerText = leAudio.mute ? 'volume_up' : 'volume_off';
+    };
+    const setVolume = (volume) => {
+      leAudio.volume = volume;
+    };
+    const toggleMute = () => {
+      leAudio.mute = !leAudio.mute;
+      document.querySelector('i.speaker').innerText = leAudio.mute ? 'volume_up' : 'volume_off';
+    };
+    const showHelp = () => {
+      document.querySelector('.instructions').classList.remove('hidden');
+    };
+    const hideHelp = () => {
+      document.querySelector('.instructions').classList.add('hidden');
+    }
+  </script>
+</head>
+<body>
+  <h1>SeARch - Multiplayer AR casual search game</h1>
+
+  <h3>Players:</h3>
+  <ul id="players" class="row"></ul>
+
+  <h3>Objectives:</h3>
+  <ul id="objectives"></ul>
+
+  <div id="misc" class="row">
+    <div class="col m6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Settings</span>
+          <select id="theme" class="input-field">
+            <option value="" disabled selected>Select theme</option>
+          </select>
+          <input type="number" class="input-field" id="num_elems" value="30" step="5" min="20" max="40">
+          <button id="restart_button" onclick="restartGame()" class="btn waves-effect waves-light">
+            <i class="material-icons">videogame_asset</i> Start new game
+          </button>
+          <button id="exit_button" onclick="stopGame()" class="btn waves-effect waves-light">
+            <i class="material-icons">cancel</i> End current game
+          </button>
+
+        </div>
+      </div>
+    </div>
+    <div class="col s6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <div class="card-action">
+            <a href="#" onclick="showHelp();"><i class="material-icons">live_help</i> How to play</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col s6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Join the game:</span>
+          <div id="qrcode"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="instructions hidden" onclick="hideHelp()">
+    <div class="col s6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text instructions-content">
+          <lottie-player src="https://assets8.lottiefiles.com/datafiles/bjmonuxaoHB7ZBf/data.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+          <img src="crosshair.svg" />
+          <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_wP8pYn/double_tap_05.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span id="messages"></span>
+    <div class="volume">
+      <p class="range-field">
+        <input type="range" id="volume" min="0" max="100" onchange="setVolume(this.value / 100);" />
+      </p>
+      <a href="#" onclick="toggleMute()"><i class="material-icons speaker">speaker</i></a>
+    </div>
+  </footer>
+
+</body>
+</html>
